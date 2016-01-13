@@ -30,4 +30,27 @@ public class ProdutoController {
 		return dao.lista();
 	}
 
+	@Path("produto/formulario")
+	public void formulario() {
+
+	}
+
+	@Path("produto/adiciona")
+	public void adiciona(Produto produto) {
+		final EntityManager em = JPAUtil.criaEntityManager();
+		final ProdutoDao dao = new ProdutoDao(em);
+		em.getTransaction().begin();
+		dao.adiciona(produto);
+		em.getTransaction().commit();
+	}
+
+	@Path("produto/remove")
+	public void remove(Produto produto) {
+		final EntityManager em = JPAUtil.criaEntityManager();
+		final ProdutoDao dao = new ProdutoDao(em);
+		em.getTransaction().begin();
+		dao.remove(produto);
+		em.getTransaction().commit();
+	}
+
 }
