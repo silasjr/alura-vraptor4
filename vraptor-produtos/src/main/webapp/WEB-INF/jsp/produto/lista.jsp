@@ -13,6 +13,14 @@
 	<a href="<c:url value='/produto/formulario'/>">
     	Adicionar mais produtos!
 	</a>
+	<a href="<c:url value='/produto/listaXML'/>">
+    	XML de produtos
+	</a>
+	<c:if test="${not empty mensagem}">
+	<div class="alert alert-success">
+	  <strong>${mensagem}!</strong>
+	</div>
+	</c:if>
 	<table class="table table-stripped table-bordered table-hover">
 		<thead>
 			<tr>
