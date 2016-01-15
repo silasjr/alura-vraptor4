@@ -3,7 +3,7 @@ package br.com.caelum.vraptor.controller;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import javax.validation.Valid;
 
 import br.com.caelum.vraptor.Controller;
 import br.com.caelum.vraptor.Delete;
@@ -13,23 +13,27 @@ import br.com.caelum.vraptor.Post;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.dao.ProdutoDao;
 import br.com.caelum.vraptor.model.Produto;
-import br.com.caelum.vraptor.util.JPAUtil;
+import br.com.caelum.vraptor.validator.Validator;
 import br.com.caelum.vraptor.view.Results;
 
 @Controller
 public class ProdutoController {
 
-	private Result result;
-	
+	private final Result result;
+	private final ProdutoDao dao;
+	private final Validator validator;
+
 	@Deprecated
 	ProdutoController() {
-	    this(null); // para uso do CDI
+		this(null, null, null); // para uso do CDI
 	}
-	
+
 	@Inject
-	public ProdutoController(Result result) {
+	public ProdutoController(Result result, ProdutoDao dao, Validator validator) {
 		super();
 		this.result = result;
+		this.dao = dao;
+		this.validator = validator;
 	}
 
 	@Path("/")
@@ -37,52 +41,52 @@ public class ProdutoController {
 
 	}
 
-	@Path("/produto/sobre") @Get
+	@Path("/produto/sobre")
+	@Get
 	public void sobre() {
 
 	}
 
 	@Get
 	public List<Produto> lista() {
-		final EntityManager em = JPAUtil.criaEntityManager();
-		final ProdutoDao dao = new ProdutoDao(em);
-		return dao.lista();
+		return this.dao.lista();
 	}
 
-	@Path("produto/formulario") @Get
+	@Path("produto/formulario")
+	@Get
 	public void formulario() {
 
 	}
 
 	@Post
-	public void adiciona(Produto produto) {
-		final EntityManager em = JPAUtil.criaEntityManager();
-		final ProdutoDao dao = new ProdutoDao(em);
-		em.getTransaction().begin();
-		dao.adiciona(produto);
-		em.getTransaction().commit();
-		
+	public void adiciona(@Valid Produto produto) {
+
+		/*
+		 * this.validator.check(produto.getQuantidade() > 0, new
+		 * I18nMessage("erro", "produto.quantidade.negativa"));
+		 */
+
+		this.validator.onErrorUsePageOf(this).formulario();
+
+		this.dao.adiciona(produto);
+
 		this.result.include("mensagem", "Produto adicionado com sucesso");
 		this.result.redirectTo(this).lista();
 	}
 
-	@Path("produto/remove") @Delete
+	@Path("produto/remove")
+	@Delete
 	public void remove(Produto produto) {
-		final EntityManager em = JPAUtil.criaEntityManager();
-		final ProdutoDao dao = new ProdutoDao(em);
-		em.getTransaction().begin();
-		dao.remove(produto);
-		em.getTransaction().commit();
-		
+
+		this.dao.remove(produto);
+
 		this.result.redirectTo(this).lista();
+
 	}
-	
+
 	@Get
 	public void listaXML() {
-		final EntityManager em = JPAUtil.criaEntityManager();
-		final ProdutoDao dao = new ProdutoDao(em);
-		
-		this.result.use(Results.xml()).from(dao.lista()).serialize();
+		this.result.use(Results.xml()).from(this.dao.lista()).serialize();
 	}
 
 }

@@ -16,6 +16,9 @@
 	<a href="<c:url value='/produto/listaXML'/>">
     	XML de produtos
 	</a>
+	
+	<h1>Listagem de Produtos do ${usuarioLogado.usuario.nome}</h1>
+	
 	<c:if test="${not empty mensagem}">
 	<div class="alert alert-success">
 	  <strong>${mensagem}!</strong>

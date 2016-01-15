@@ -23,6 +23,14 @@
 		Quantidade: <input type="text" name="produto.quantidade" class="form-control">
 		<input type="submit" value="Salvar" class="btn btn-primary" />
 	</form>
+	
+	<c:if test="${not empty errors}">
+	  <div class="alert alert-danger">
+	    <c:forEach var="error" items="${errors}">
+	        ${error.category} - ${error.message}<br />
+	    </c:forEach>
+	  </div>
+	</c:if>
 
 </body>
 </html>
