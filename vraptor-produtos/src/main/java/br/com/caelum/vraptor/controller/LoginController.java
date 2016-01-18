@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import br.com.caelum.vraptor.Controller;
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Post;
+import br.com.caelum.vraptor.Public;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.dao.UsuarioDao;
 import br.com.caelum.vraptor.model.Usuario;
@@ -32,10 +33,12 @@ public class LoginController {
 		this.usuarioLogado = usuarioLogado;
 	}
 
+	@Public
 	@Get
 	public void formulario() {
 	}
 
+	@Public
 	@Post
 	public void autentica(Usuario usuario) {
 		if (!this.dao.existe(usuario)) {
